@@ -1,6 +1,9 @@
 pipeline {
 agent any
 
+options {
+    skipDefaultCheckout()
+}
 environment {
    PATH = "C:\\Windows\\System32"
 }
@@ -8,13 +11,16 @@ environment {
 stages {
 stage ('Checkout') {
         steps{
-            git 'https://github.com/nimitjohri/dotnet-jenkins-demo.git' 
-
+            checkout(scm)
+            stash includes: '**', name: 'source', useDefaultExcludes: false
         }
     }
 stage ('Restore Packages') {     
          steps {
-             bat '"C:\\Program Files\\dotnet\\dotnet.exe" restore "dotnet-jenkins-demo\\jenkins-demo.sln" ' 
+             unstash 'source'
+             script {
+                 bat '"C:\\Program Files\\dotnet\\dotnet.exe" restore "dotnet-jenkins-demo\\jenkins-demo.sln" ' 
+             }             
           }
         }
 // stage('Clean') {
@@ -24,7 +30,7 @@ stage ('Restore Packages') {
 //     }
 stage('Build') {
      steps {
-            bat "\"${tool 'MSBuild'}\" dotnet-jenkins-demo\\jenkins-demo.sln /p:Configuration=Debug /p:Platform=\"Any CPU\" /p:ProductVersion=1.0.0.${env.BUILD_NUMBER}"
+            bat "\"${tool 'msbuild'}\" dotnet-jenkins-demo\\jenkins-demo.sln /p:Configuration=Debug /p:Platform=\"Any CPU\" /p:ProductVersion=1.0.0.${env.BUILD_NUMBER}"
       }
    }
  }
