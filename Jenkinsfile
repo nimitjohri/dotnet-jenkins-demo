@@ -9,7 +9,6 @@ stages {
 stage ('Checkout') {
             git 'https://github.com/nimitjohri/dotnet-jenkins-demo.git' 
             }
-}
 stage ('Restore Packages') {     
          steps {
              bat '"C:\\Program Files\\dotnet\\dotnet.exe" restore "dotnet-jenkins-demo\\jenkins-demo.sln" ' 
@@ -26,5 +25,4 @@ stage('Build') {
       }
    }
  }
-}
 }
