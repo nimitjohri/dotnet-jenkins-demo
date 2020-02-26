@@ -17,6 +17,7 @@ stage ('Checkout') {
     }
 stage ('Restore Packages') {     
          steps {
+             deleteDir()
              unstash 'source'
              script {
                  bat '"C:\\Program Files\\dotnet\\dotnet.exe" restore "dotnet-jenkins-demo\\jenkins-demo.sln" ' 
